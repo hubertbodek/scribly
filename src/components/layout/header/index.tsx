@@ -1,36 +1,12 @@
-'use client'
-
-import { getBrowserClient } from '@/api/supabase/browser'
-import { useRouter } from 'next/navigation'
-import Logo from './logo'
 import Link from 'next/link'
+
+import { getSession } from '@/api/supabase/server'
 import { Button } from '@/components/ui/button'
+import Logo from '@/components/layout/header/logo'
+import UserOptions from '@/components/layout/header/user-options'
 
-export default function Header() {
-  const router = useRouter()
-  const supabase = getBrowserClient()
-
-  async function signUpNewUser() {
-    const { data, error } = await supabase.auth.signUp({
-      email: 'example@email.com',
-      password: 'example-password',
-    })
-  }
-
-  async function signOut() {
-    const { error } = await supabase.auth.signOut()
-
-    router.refresh()
-  }
-
-  async function signInWithEmail() {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: 'example@email.com',
-      password: 'example-password',
-    })
-
-    router.refresh()
-  }
+export default async function Header() {
+  const session = await getSession()
 
   return (
     <header className="h-20 bg-primary">
@@ -38,14 +14,20 @@ export default function Header() {
         <Logo />
         <div className="flex items-center gap-4">
           <Link href="/articles">Articles</Link>
-          <Button onClick={signUpNewUser} variant="outline">
-            Sign Up
-          </Button>
-          <Button onClick={signInWithEmail} variant="outline">
-            Sign In
-          </Button>
+          {session ? <UserOptions /> : <AuthButtons />}
         </div>
       </nav>
     </header>
   )
 }
+
+const AuthButtons = () => (
+  <>
+    <Button asChild variant="outline">
+      <Link href="/sign-up">Join</Link>
+    </Button>
+    <Button asChild variant="outline">
+      <Link href="/sign-in">Sign In</Link>
+    </Button>
+  </>
+)

@@ -7,6 +7,8 @@ export default async function Home() {
 
   const user = await getUser()
 
+  console.log({ articles, user })
+
   return (
     <main className="flex items-center flex-col justify-center min-h-screen p-24">
       {user?.email}
