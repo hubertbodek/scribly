@@ -5,9 +5,9 @@ export default async function Layout({ children }: { children: React.ReactNode }
   await protectRoute()
 
   return (
-    <main className="container py-10">
-      <h1 className="text-4xl font-bold mb-4">Dashboard</h1>
-      <div className="flex">
+    <main className="px-2 h-[var(--main-min-height)] flex flex-col">
+      {/* <h1 className="text-4xl font-bold my-2">Dashboard</h1> */}
+      <div className="flex h-full [&>*]:py-6">
         <Sidebar />
         {children}
       </div>

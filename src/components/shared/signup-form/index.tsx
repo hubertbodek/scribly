@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,7 +15,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-import { handleSignin } from './signin.action'
+import { handleSignup } from './signup.action'
 import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
@@ -24,21 +23,21 @@ const formSchema = z.object({
   password: z.string().min(6),
 })
 
-export type SigninFormData = z.infer<typeof formSchema>
+export type SignupFormData = z.infer<typeof formSchema>
 
-export default function SigninForm() {
+export default function SignupForm() {
   const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: 'example@email.com',
-      password: 'example-password',
+      email: '',
+      password: '',
     },
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const error = await handleSignin(values)
+    const error = await handleSignup(values)
 
     if (error) {
       form.setError('root.serverError', {
@@ -50,7 +49,7 @@ export default function SigninForm() {
     }
 
     router.refresh()
-    router.back()
+    router.replace('/')
   }
 
   return (
@@ -86,7 +85,7 @@ export default function SigninForm() {
           <FormMessage>{form.formState.errors.root.serverError.message}</FormMessage>
         )}
         <Button type="submit" className="w-full" loading={form.formState.isSubmitting}>
-          Sign In
+          Create Account
         </Button>
       </form>
     </Form>

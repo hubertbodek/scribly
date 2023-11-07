@@ -9,8 +9,8 @@ export default async function Header() {
   const session = await getSession()
 
   return (
-    <header className="h-20 bg-primary">
-      <nav className="container mx-auto text-primary-foreground flex items-center h-full justify-between">
+    <header className="h-[var(--header-height)] bg-primary">
+      <nav className="px-5 mx-auto text-primary-foreground flex items-center h-full justify-between">
         <Logo />
         <div className="flex items-center gap-4">
           <Link href="/articles">Articles</Link>

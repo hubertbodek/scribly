@@ -1,5 +1,9 @@
-import React from 'react'
+import DashboardView from '@/components/dashboard/view'
 
 export default function Settings() {
-  return <div>Settings</div>
+  return (
+    <DashboardView>
+      <DashboardView.Title>Settings</DashboardView.Title>
+    </DashboardView>
+  )
 }
