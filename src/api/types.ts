@@ -1,4 +1,10 @@
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export interface Database {
   public: {
@@ -7,34 +13,33 @@ export interface Database {
         Row: {
           created_at: string
           id: number
+          is_published: boolean | null
           title: string | null
+          user_id: string | null
         }
         Insert: {
           created_at?: string
           id?: number
+          is_published?: boolean | null
           title?: string | null
+          user_id?: string | null
         }
         Update: {
           created_at?: string
           id?: number
+          is_published?: boolean | null
           title?: string | null
+          user_id?: string | null
         }
-        Relationships: []
-      }
-      Users: {
-        Row: {
-          created_at: string
-          id: number
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-        }
-        Update: {
-          created_at?: string
-          id?: number
-        }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "articles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {

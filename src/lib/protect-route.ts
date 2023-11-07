@@ -1,4 +1,4 @@
-import { getServerClient, getSession } from '@/api/supabase/server'
+import { getSession } from '@/api/supabase/server'
 import { redirect } from 'next/navigation'
 
 interface Options {

@@ -35,16 +35,36 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
+  loading?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, loading = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button'
     return (
-      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
+      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
+        {loading ? <Loader /> : props.children}
+      </Comp>
     )
   }
 )
 Button.displayName = 'Button'
 
 export { Button, buttonVariants }
+
+const Loader = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    className="h-5 w-5 animate-spin"
+  >
+    <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+  </svg>
+)

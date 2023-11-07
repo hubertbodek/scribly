@@ -24,10 +24,14 @@ export default async function Header() {
 const AuthButtons = () => (
   <>
     <Button asChild variant="outline">
-      <Link href="/sign-up">Join</Link>
+      <Link href="/sign-up" scroll={false}>
+        Join
+      </Link>
     </Button>
     <Button asChild variant="outline">
-      <Link href="/sign-in">Sign In</Link>
+      <Link href="/sign-in" scroll={false}>
+        Sign In
+      </Link>
     </Button>
   </>
 )

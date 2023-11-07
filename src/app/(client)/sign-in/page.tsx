@@ -9,7 +9,6 @@ const SignInPage = () => {
   return (
     <main className="container">
       <h1 className="text-3xl">Sign in</h1>
-      <Button onClick={signInWithEmail}>Sign in</Button>
     </main>
   )
 }

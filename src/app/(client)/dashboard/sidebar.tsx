@@ -6,6 +6,7 @@ export default function Sidebar() {
     <aside className="w-64 flex flex-col">
       <Link href="/dashboard">Profile</Link>
       <Link href="/dashboard/settings">Settings</Link>
+      <Link href="/dashboard/my-posts">My posts</Link>
     </aside>
   )
 }
