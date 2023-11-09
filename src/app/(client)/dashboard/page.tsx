@@ -50,8 +50,8 @@ export default async function MyPosts() {
                     Posted on {formatDate(article.created_at)}
                   </p>
                   <div className="justify-self-end mt-auto">
-                    <Button variant="link" className="px-0">
-                      Read
+                    <Button variant="link" className="px-0" asChild>
+                      <Link href={`/${user.id}/${article.id}`}>Read</Link>
                     </Button>
                   </div>
                 </CardContent>

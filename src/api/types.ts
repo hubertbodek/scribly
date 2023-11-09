@@ -11,6 +11,7 @@ export interface Database {
     Tables: {
       articles: {
         Row: {
+          content: string | null
           created_at: string
           id: number
           is_published: boolean | null
@@ -18,6 +19,7 @@ export interface Database {
           user_id: string | null
         }
         Insert: {
+          content?: string | null
           created_at?: string
           id?: number
           is_published?: boolean | null
@@ -25,6 +27,7 @@ export interface Database {
           user_id?: string | null
         }
         Update: {
+          content?: string | null
           created_at?: string
           id?: number
           is_published?: boolean | null
