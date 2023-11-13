@@ -94,6 +94,6 @@
 
   .with-placeholder::after {
     content: attr(data-placeholder);
-    @apply absolute inset-0 z-10 block text-left text-gray-200 font-light italic;
+    @apply absolute inset-0 -z-10 block text-left text-gray-200 font-light italic;
   }
 }

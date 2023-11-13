@@ -33,8 +33,6 @@ export default async function Article({ params }: ArticlePage) {
 
   const articleContents = content ? JSON.parse(content) : null
 
-  console.log({ articleContents })
-
   return (
     <section className="prose py-20 mx-auto px-4">
       <h1>{title}</h1>
@@ -55,8 +53,6 @@ export default async function Article({ params }: ArticlePage) {
 
 const TextRenderer = (content: any) => {
   if (!content) return null
-
-  console.log({ content }, content.length)
 
   return (
     <div>

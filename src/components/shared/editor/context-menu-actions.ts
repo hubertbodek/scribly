@@ -4,11 +4,15 @@ const applyStyles = (
   styles?: Partial<CSSStyleDeclaration>
 ) => {
   const range = selection?.getRangeAt(0)
-  const span = document.createElement(el)
 
-  Object.assign(span.style, styles)
+  const element = document.createElement(el)
+  const isSafeRange = range.startContainer === range.endContainer
 
-  range?.surroundContents(span)
+  if (!isSafeRange) return
+
+  Object.assign(element.style, styles)
+
+  range?.surroundContents(element)
 }
 
 const bold = (selection: Selection) =>

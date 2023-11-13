@@ -1,36 +1,77 @@
 'use client'
 
-import { FormEvent, useEffect, useRef, useState } from 'react'
+import React, { memo, useEffect } from 'react'
+import { Slot } from '@radix-ui/react-slot'
 
-import { Button } from '@/components/ui/button'
-import { getBrowserClient, getUser } from '@/api/supabase/browser'
+import ContextMenuComponent from './context-menu'
+import { WritableParagraph, WritableTitle } from './writable-elements'
 
-import ContextMenu from './context-menu'
+import useClickOutside from '@/hooks/useClickOutside'
+import useSelection from './useSelection'
+import useEditorValues from './useEditorValues'
+import useEditorTimeout from './useEditorTimeout'
+import { EditorContext, useEditorContext } from './useEditorContext'
 
-interface Coords {
-  x: number
-  y: number
-}
+const ContextMenu = memo(ContextMenuComponent)
 
 interface Content {
   type: string
   content: string | null
 }
 
-interface EditorProps {
-  titlePlaceholder?: string
+export interface EditorValues {
+  title: () => string | undefined
+  content: () => Content[] | undefined
 }
 
-const supabase = getBrowserClient()
+export type OnIdleCallback = (editor: EditorValues) => void
 
-// TODO: Move logic to hooks
-export default function Editor({ titlePlaceholder = 'Enter your title here...' }: EditorProps) {
-  const titleRef = useRef<HTMLHeadingElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
+interface EditorProps {
+  children?: React.ReactNode
+  titlePlaceholder?: string
+  onIdle?: OnIdleCallback
+  idleTime?: number
+}
 
-  const [title, setTitle] = useState('')
-  const [selectedTextCoords, setSelectedTextCoords] = useState<Coords | null>(null)
-  const [selection, setSelection] = useState<Selection | null>(null)
+// TODO: Implement this to be able to call const {title, content} = useEditor()
+
+// export function EditorProvider({ children }: { children: React.ReactNode }) {
+//   const [title, setTitle] = React.useState<string | undefined>()
+//   const [content, setContent] = React.useState<Content[] | undefined>()
+
+//   return (
+//     <EditorContext.Provider
+//       value={{
+//         title,
+//         content,
+//       }}
+//     >
+//       {children}
+//     </EditorContext.Provider>
+//   )
+// }
+
+export function Editor({
+  children,
+  titlePlaceholder = 'Enter your title here...',
+  onIdle,
+  idleTime = 5000,
+}: EditorProps) {
+  const { selection, setSelection, selectedTextCoords, handleSelection } = useSelection()
+  const { title, content, titleRef, contentRef, buttons } = useEditorValues()
+  const { handleTimeout } = useEditorTimeout(() => {
+    if (!onIdle) return
+
+    onIdle({ title, content })
+  }, idleTime)
+
+  useClickOutside(() => {
+    const isSelecting = Boolean(window.getSelection()?.toString())
+
+    if (!isSelecting && selection) {
+      setSelection(null)
+    }
+  }, [...buttons])
 
   useEffect(() => {
     if (titleRef.current) {
@@ -38,90 +79,46 @@ export default function Editor({ titlePlaceholder = 'Enter your title here...' }
     }
   }, [titleRef])
 
-  const save = async () => {
-    const blocks = contentRef.current?.children
-
-    if (!blocks) return
-
-    const content: Content[] = []
-
-    Array.from(blocks).forEach((block) => {
-      const blockType = block.nodeName.toLowerCase()
-      const blockContent = block.innerHTML
-
-      content.push({ type: blockType, content: blockContent })
-    })
-
-    const currentUser = await getUser()
-
-    // TODO: Handle error
-    const { data, error } = await supabase
-      .from('articles')
-      .insert([
-        {
-          title,
-          user_id: currentUser?.data.user?.id,
-          content: JSON.stringify(content),
-        },
-      ])
-      .select()
-
-    return {
-      title,
-      content,
-    }
-  }
-
-  const handleTitleInput = (e: FormEvent<HTMLHeadingElement>) => {
-    if (!e.currentTarget.innerText) {
-      e.currentTarget.dataset.placeholder = titlePlaceholder
-      return
-    }
-
-    e.currentTarget.dataset.placeholder = ''
-    setTitle(e.currentTarget.innerText)
-  }
-
-  const getSelectionCoords = (selection: Selection) => {
-    const range = selection?.getRangeAt(0)
-    const rect = range?.getBoundingClientRect()
-
-    return { x: rect?.left, y: rect?.top }
-  }
-
-  const handleSelection = () => {
-    const selection = window.getSelection()
-
-    if (selection) {
-      setSelection(selection)
-      setSelectedTextCoords(getSelectionCoords(selection))
-    }
-  }
-
-  const handleClickOutside = () => {
-    if (selection) {
-      setSelection(null)
-    }
-  }
-
   return (
-    <div className="px-4 py-12 outline-none prose mx-auto">
-      <h1
-        ref={titleRef}
-        data-placeholder={titlePlaceholder}
-        className="outline-none h-[1em] with-placeholder relative"
-        contentEditable
-        onInput={handleTitleInput}
-      />
-      <div
-        ref={contentRef}
-        className="text-body outline-none [&>*]:mb-1 [&>*]:p-4 [&>*:focus]:bg-red-100 [&>*:hover]:bg-slate-100 last:border-b"
-        contentEditable
-        onMouseUp={handleSelection}
-        onBlur={handleClickOutside}
-      />
-      <ContextMenu selection={selection} coords={selectedTextCoords} />
-      <Button onClick={save}>Save</Button>
-    </div>
+    <EditorContext.Provider
+      value={{
+        title,
+        content,
+      }}
+    >
+      <div className="px-4 py-12 outline-none prose mx-auto">
+        <WritableTitle onInput={handleTimeout} ref={titleRef} placeholder={titlePlaceholder} />
+        <div
+          ref={contentRef}
+          className="text-body outline-none last:border-b"
+          suppressContentEditableWarning={true}
+          contentEditable={true}
+          role="textbox"
+          onMouseUp={handleSelection}
+          onInput={handleTimeout}
+        >
+          <WritableParagraph onDragStart={(e) => console.log(e)} />
+        </div>
+        <ContextMenu selection={selection} coords={selectedTextCoords} />
+        {children}
+      </div>
+    </EditorContext.Provider>
   )
 }
+
+export interface EditorSaveWrapeprProps {
+  onSave: (editor: EditorValues) => void
+  children: React.ReactNode
+}
+
+export const EditorSaveWrapper = ({ onSave, children }: EditorSaveWrapeprProps) => {
+  const { title, content } = useEditorContext()
+
+  const handleOnSave = () => {
+    onSave({ title, content })
+  }
+
+  return <Slot onClick={handleOnSave}>{children}</Slot>
+}
+
+Editor.Save = EditorSaveWrapper

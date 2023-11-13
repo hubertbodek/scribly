@@ -3,7 +3,7 @@ import { Fragment } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { action } from './context-actions'
+import { action } from './context-menu-actions'
 
 const options = [
   { name: 'Bold', icon: 'B', action: action.bold },
@@ -24,7 +24,8 @@ export default function ContextMenu({ selection, coords }: ContentMenuProps) {
 
   return (
     <Card
-      className="overflow-hidden inline-flex items-center flex-wrap absolute"
+      data-context-menu="container"
+      className="overflow-hidden inline-flex items-center flex-wrap absolute transition-all -translate-x-1/2"
       style={{ top: coords.y - 40, left: coords.x }}
     >
       {options.map((option) => {
@@ -33,6 +34,7 @@ export default function ContextMenu({ selection, coords }: ContentMenuProps) {
         return (
           <Fragment key={option.name}>
             <Button
+              data-context-menu="button"
               variant="ghost"
               className="w-11"
               onClick={() => {
