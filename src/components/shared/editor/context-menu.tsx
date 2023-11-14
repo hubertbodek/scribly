@@ -26,7 +26,7 @@ export default function ContextMenu({ selection, coords }: ContentMenuProps) {
     <Card
       data-context-menu="container"
       className="overflow-hidden inline-flex items-center flex-wrap absolute transition-all -translate-x-1/2"
-      style={{ top: coords.y - 40, left: coords.x }}
+      style={{ top: coords.y - 60, left: coords.x + 20 }}
     >
       {options.map((option) => {
         const isLast = options.indexOf(option) === options.length - 1

@@ -8,20 +8,21 @@ interface ArticlePage {
   }
 }
 
-export default async function Article({ params }: ArticlePage) {
-  const [uid, slug] = params.article
+const supabase = getServerClient()
 
-  const { data, error } = await adminAuthClient.getUserById(uid)
+export default async function Article({ params }: ArticlePage) {
+  const [handle, slug] = params.article
+
+  const { data, error } = await supabase.from('profiles').select().eq('handle', handle).single()
 
   if (!data || error) {
     return notFound()
   }
 
-  const supabase = getServerClient()
   const { data: articleData, error: articleError } = await supabase
     .from('articles')
     .select()
-    .eq('user_id', uid)
+    .eq('user_id', data.id)
     .eq('id', slug)
     .single()
 

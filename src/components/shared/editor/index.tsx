@@ -97,6 +97,7 @@ export function Editor({
           onMouseUp={handleSelection}
           onInput={handleTimeout}
         >
+          {/* TODO: Handle dragging */}
           <WritableParagraph onDragStart={(e) => console.log(e)} />
         </div>
         <ContextMenu selection={selection} coords={selectedTextCoords} />

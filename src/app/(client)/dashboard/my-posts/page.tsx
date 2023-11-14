@@ -1,7 +1,7 @@
 import { getUser, getServerClient } from '@/api/supabase/server'
-import PostsGrid from './posts-grid'
-import { redirect } from 'next/navigation'
 import { assertUser } from '@/lib/assert-user'
+
+import PostsGrid from './posts-grid'
 
 export default async function Page() {
   const supabase = getServerClient()

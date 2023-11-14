@@ -1,6 +1,6 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
-import { Database } from '@/api/types'
+import { Database } from '@/api/schema'
 
 export const getBrowserClient = () => createClientComponentClient<Database>()
 

@@ -2,7 +2,7 @@ import Link from 'next/link'
 import React from 'react'
 
 import { type Tables } from '@/api/types'
-import { getUser } from '@/api/supabase/server'
+import { getUser, getServerClient } from '@/api/supabase/server'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { formatDate } from '@/lib/locale-utils'
@@ -15,13 +15,21 @@ interface PostsGridProps {
   noDataMessage?: string
 }
 
+const supabase = getServerClient()
+
 export default async function PostsGrid({ posts, noDataMessage }: PostsGridProps) {
   const user = await getUser()
 
   assertUser(user)
 
-  if (!posts) {
-    return <div>{noDataMessage || 'No posts'}</div>
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('handle')
+    .eq('id', user?.id)
+    .single()
+
+  if (!posts || posts.length === 0) {
+    return <div className="py-4 text-muted-foreground italic">{noDataMessage || 'No posts'}</div>
   }
 
   return (
@@ -35,7 +43,7 @@ export default async function PostsGrid({ posts, noDataMessage }: PostsGridProps
             </p>
             <div className="justify-self-end mt-auto">
               <Button variant="link" className="px-0" asChild>
-                <Link href={`/${user.id}/${post.id}`}>Read</Link>
+                <Link href={`/${profile?.handle}/${post.id}`}>Read</Link>
               </Button>
             </div>
           </CardContent>

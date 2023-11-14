@@ -1,14 +1,28 @@
-'use client'
-
 import DashboardView from '@/components/dashboard/view'
-import { useUser } from '@/providers/auth-provider'
+import { getServerClient, getUser } from '@/api/supabase/server'
+import { assertUser } from '@/lib/assert-user'
 
-export default function Profile() {
-  const { user } = useUser()
+const supabase = getServerClient()
+
+export default async function Profile() {
+  const user = await getUser()
+
+  assertUser(user)
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select()
+    .eq('id', user?.id)
+    .single()
 
   return (
     <DashboardView>
       <DashboardView.Title>Profile</DashboardView.Title>
+      <div className="space-y-4">
+        <p>First name: {profile?.first_name}</p>
+        <p>Last name: {profile?.last_name}</p>
+        <p>Handle: {profile?.handle}</p>
+      </div>
     </DashboardView>
   )
 }
