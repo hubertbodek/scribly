@@ -2,9 +2,8 @@ import { getServerClient, getUser } from '@/api/supabase/server'
 import { DropdownMenuLabel } from '@/components/ui/dropdown-menu'
 import { assertUser } from '@/lib/assert-user'
 
-const supabase = getServerClient()
-
 export default async function UserInfo() {
+  const supabase = getServerClient()
   const user = await getUser()
 
   assertUser(user)

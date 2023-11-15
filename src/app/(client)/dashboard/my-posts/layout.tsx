@@ -1,9 +1,9 @@
 import React from 'react'
+import Link from 'next/link'
 import { Pencil1Icon } from '@radix-ui/react-icons'
 
-import { Button } from '@/components/ui/button'
 import DashboardView from '@/components/dashboard/view'
-import Link from 'next/link'
+import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export default function Layout(props: { draft: React.ReactNode; children: React.ReactNode }) {

@@ -2,9 +2,8 @@ import DashboardView from '@/components/dashboard/view'
 import { getServerClient, getUser } from '@/api/supabase/server'
 import { assertUser } from '@/lib/assert-user'
 
-const supabase = getServerClient()
-
 export default async function Profile() {
+  const supabase = getServerClient()
   const user = await getUser()
 
   assertUser(user)

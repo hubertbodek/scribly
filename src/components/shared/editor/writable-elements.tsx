@@ -1,11 +1,23 @@
-import { FormEvent, forwardRef } from 'react'
+import React, { FormEvent, forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 
-interface WritableParagraphProps extends HTMLParagraphElement {
+interface WritableParagraphProps extends React.ComponentProps<'p'> {
   placeholder?: string
 }
 
-export const WritableParagraph = forwardRef<WritableParagraphProps, React.ComponentProps<'p'>>(
-  ({ placeholder, onInput, ...props }, ref) => {
+export const WritableParagraph = forwardRef<HTMLParagraphElement, WritableParagraphProps>(
+  ({ placeholder, onInput, ...props }, forwardedRef) => {
+    const ref = useRef<HTMLParagraphElement>(null)
+
+    useImperativeHandle(forwardedRef, () => ref.current as HTMLParagraphElement)
+
+    useEffect(() => {
+      const el = ref?.current
+
+      if (el && el?.innerText) {
+        el.dataset.placeholder = ''
+      }
+    }, [placeholder])
+
     const handlePlaceholder = (e: FormEvent<HTMLParagraphElement>) => {
       if (!e.currentTarget.innerText) {
         e.currentTarget.dataset.placeholder = placeholder
@@ -29,8 +41,20 @@ export const WritableParagraph = forwardRef<WritableParagraphProps, React.Compon
   }
 )
 
-export const WritableTitle = forwardRef<WritableParagraphProps, React.ComponentProps<'h1'>>(
-  ({ placeholder, onInput, ...props }, ref) => {
+export const WritableTitle = forwardRef<HTMLHeadElement, WritableParagraphProps>(
+  ({ placeholder, onInput, ...props }, forwardedRef) => {
+    const ref = useRef<HTMLParagraphElement>(null)
+
+    useImperativeHandle(forwardedRef, () => ref.current as HTMLHeadElement)
+
+    useEffect(() => {
+      const el = ref?.current
+
+      if (el && el?.innerText) {
+        el.dataset.placeholder = ''
+      }
+    }, [placeholder])
+
     const handlePlaceholder = (e: FormEvent<HTMLHeadingElement>) => {
       if (!e.currentTarget.innerText) {
         e.currentTarget.dataset.placeholder = placeholder
@@ -45,7 +69,7 @@ export const WritableTitle = forwardRef<WritableParagraphProps, React.ComponentP
       <h1
         ref={ref}
         data-placeholder={placeholder}
-        className="outline-none h-[1em] with-placeholder relative"
+        className="outline-none min-h-[1em] with-placeholder relative"
         onInput={handlePlaceholder}
         contentEditable
         {...props}

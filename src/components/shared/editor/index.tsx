@@ -11,10 +11,11 @@ import useSelection from './useSelection'
 import useEditorValues from './useEditorValues'
 import useEditorTimeout from './useEditorTimeout'
 import { EditorContext, useEditorContext } from './useEditorContext'
+import TextRenderer from '../text-renderer'
 
 const ContextMenu = memo(ContextMenuComponent)
 
-interface Content {
+export interface Content {
   type: string
   content: string | null
 }
@@ -31,6 +32,8 @@ interface EditorProps {
   titlePlaceholder?: string
   onIdle?: OnIdleCallback
   idleTime?: number
+  initialTitle?: string
+  initialContent?: Content[]
 }
 
 // TODO: Implement this to be able to call const {title, content} = useEditor()
@@ -56,6 +59,8 @@ export function Editor({
   titlePlaceholder = 'Enter your title here...',
   onIdle,
   idleTime = 5000,
+  initialTitle,
+  initialContent,
 }: EditorProps) {
   const { selection, setSelection, selectedTextCoords, handleSelection } = useSelection()
   const { title, content, titleRef, contentRef, buttons } = useEditorValues()
@@ -74,10 +79,14 @@ export function Editor({
   }, [...buttons])
 
   useEffect(() => {
-    if (titleRef.current) {
-      titleRef.current.focus()
+    const titleEl = titleRef.current
+
+    if (titleEl) {
+      titleEl.innerText = initialTitle ?? ''
+
+      titleEl.focus()
     }
-  }, [titleRef])
+  }, [initialTitle, titleRef])
 
   return (
     <EditorContext.Provider
@@ -97,8 +106,11 @@ export function Editor({
           onMouseUp={handleSelection}
           onInput={handleTimeout}
         >
-          {/* TODO: Handle dragging */}
-          <WritableParagraph onDragStart={(e) => console.log(e)} />
+          {!initialContent || initialContent?.length === 0 ? (
+            <WritableParagraph onDragStart={(e) => console.log(e)} />
+          ) : (
+            <TextRenderer content={initialContent} />
+          )}
         </div>
         <ContextMenu selection={selection} coords={selectedTextCoords} />
         {children}
