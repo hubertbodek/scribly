@@ -1,8 +1,10 @@
 import { notFound } from 'next/navigation'
+
 import EditorClient from './editor-client'
 import { getServerClient, getUser } from '@/api/supabase/server'
 import { Content } from '@/components/shared/editor'
 import { assertUser } from '@/lib/assert-user'
+import { ImageEditor } from '@/components/shared/image-editor'
 
 interface ScribeProps {
   params: { slug?: string[] }
@@ -35,7 +37,7 @@ export default async function Scribe({ params, searchParams }: ScribeProps) {
     const { title, content } = articleData
     const articleContents = content ? (JSON.parse(content) as Content[]) : null
 
-    return <EditorClient title={title ?? ''} content={articleContents ?? []} />
+    return <EditorClient title={title ?? ''} content={articleContents ?? []} draft />
   }
 
   if (slug) {
@@ -63,5 +65,5 @@ export default async function Scribe({ params, searchParams }: ScribeProps) {
     return <EditorClient title={title ?? ''} content={articleContents ?? []} />
   }
 
-  return <EditorClient />
+  return <EditorClient draft />
 }

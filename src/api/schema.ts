@@ -15,30 +15,33 @@ export interface Database {
           created_at: string
           description: string | null
           id: number
+          image_url: string | null
           is_published: boolean | null
           main_image: string | null
+          profile_id: string | null
           title: string | null
-          user_id: string | null
         }
         Insert: {
           content?: string | null
           created_at?: string
           description?: string | null
           id?: number
+          image_url?: string | null
           is_published?: boolean | null
           main_image?: string | null
+          profile_id?: string | null
           title?: string | null
-          user_id?: string | null
         }
         Update: {
           content?: string | null
           created_at?: string
           description?: string | null
           id?: number
+          image_url?: string | null
           is_published?: boolean | null
           main_image?: string | null
+          profile_id?: string | null
           title?: string | null
-          user_id?: string | null
         }
         Relationships: [
           {
@@ -49,10 +52,10 @@ export interface Database {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "articles_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "articles_profile_id_fkey"
+            columns: ["profile_id"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           }
         ]

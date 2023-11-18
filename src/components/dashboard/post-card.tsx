@@ -1,9 +1,7 @@
-import Link from 'next/link'
-
 import { Tables } from '@/api/types'
 import { formatDate } from '@/lib/locale-utils'
 import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import Image from 'next/image'
 
 interface Post extends Tables<'articles'> {}
 
@@ -21,7 +19,14 @@ export default function PostCard({
         <p className="text-sm text-gray-500 dark:text-gray-400">
           Created on {formatDate(post.created_at)}
         </p>
-        <div className="flex-1 bg-gray-300 rounded-xl w-full"></div>
+        <div className="relative flex-1 bg-gray-300 rounded-xl w-full">
+          <Image
+            src="/image-placeholder.svg"
+            alt="Image placeholder"
+            fill
+            className="object-cover object-center"
+          />
+        </div>
         {buttonSlot}
       </CardContent>
     </Card>

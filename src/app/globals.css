@@ -23,7 +23,7 @@
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
-    --radius: 0;
+    --radius: 0.3rem;
 
     --header-height: 5rem;
     --main-min-height: calc(100vh - var(--header-height));

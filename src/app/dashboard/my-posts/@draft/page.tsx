@@ -1,6 +1,7 @@
 import { getUser, getServerClient } from '@/api/supabase/server'
-import PostsGrid from '../posts-grid'
 import { assertUser } from '@/lib/assert-user'
+
+import PostsGrid from '@/components/shared/posts-grid'
 
 export default async function MyPosts() {
   const supabase = getServerClient()
@@ -12,7 +13,14 @@ export default async function MyPosts() {
     .from('articles')
     .select()
     .not('is_published', 'is', true)
-    .eq('user_id', user?.id)
+    .eq('profile_id', user?.id)
 
-  return <PostsGrid posts={articles} noDataMessage="You haven't saved any articles yet." />
+  return (
+    <PostsGrid
+      user={user}
+      error={error}
+      posts={articles}
+      noDataMessage="You haven't saved any articles yet."
+    />
+  )
 }

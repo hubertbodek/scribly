@@ -1,6 +1,7 @@
 import { getServerClient, getUser } from '@/api/supabase/server'
-import { DropdownMenuLabel } from '@/components/ui/dropdown-menu'
+import { DropdownMenuItem, DropdownMenuLabel } from '@/components/ui/dropdown-menu'
 import { assertUser } from '@/lib/assert-user'
+import Link from 'next/link'
 
 export default async function UserInfo() {
   const supabase = getServerClient()
@@ -17,7 +18,12 @@ export default async function UserInfo() {
   return (
     <DropdownMenuLabel className="font-normal">
       <div className="flex flex-col space-y-1">
-        <p className="text-sm font-medium leading-none">{data?.handle}</p>
+        <DropdownMenuItem
+          asChild
+          className="text-sm font-medium leading-none hover:underline px-0 hover:!bg-transparent"
+        >
+          <Link href={`/${data?.handle}`}>{data?.handle}</Link>
+        </DropdownMenuItem>
         <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
       </div>
     </DropdownMenuLabel>

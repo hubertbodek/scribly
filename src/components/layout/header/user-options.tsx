@@ -6,7 +6,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import useAuth from '@/hooks/useAuth'
 import UserInfo from './user-info'
 import UserOptionsLinks from './user-options-links'
 

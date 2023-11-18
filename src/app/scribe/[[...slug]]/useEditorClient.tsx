@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import { getBrowserClient, getUser } from '@/api/supabase/browser'
 import { Content, EditorValues } from '@/components/shared/editor'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -7,12 +9,10 @@ const supabase = getBrowserClient()
 export default function useEditorClient() {
   const router = useRouter()
   const searchParams = useSearchParams()
-
+  const [image, setImage] = useState<File | null>(null)
   const createArticle = async (article: { title: string; content: Content[] }) => {
     const { title, content } = article
     const currentUser = await getUser()
-
-    console.log('CREATED ARTICLE')
 
     // TODO: Handle error
     const { data, error } = await supabase
@@ -31,8 +31,7 @@ export default function useEditorClient() {
   }
 
   const updateArticle = async (article: { id: string; title: string; content: Content[] }) => {
-    const { title, content } = article
-    const currentUser = await getUser()
+    const { id, title, content } = article
 
     // TODO: Handle error
 
@@ -42,7 +41,7 @@ export default function useEditorClient() {
         title,
         content: JSON.stringify(content),
       })
-      .eq('id', article.id)
+      .eq('id', id)
       .select()
       .single()
 
@@ -51,10 +50,14 @@ export default function useEditorClient() {
     return data
   }
 
-  const publishArticle = async (id: string) => {
+  const publishArticle = async (article: { id: string; title: string; content: Content[] }) => {
+    const { id, title, content } = article
+
     const { data, error } = await supabase
       .from('articles')
       .update({
+        title,
+        content: JSON.stringify(content),
         is_published: true,
       })
       .eq('id', id)
@@ -90,8 +93,32 @@ export default function useEditorClient() {
     const articleData = await createArticle({ title, content })
     router.replace(`/scribe?article_id=${articleData?.id}`)
   }
+
+  const onPublish = async ({ title: titleGetter, content: contentGetter }: EditorValues) => {
+    const articleId = searchParams.get('article_id')
+    const content = contentGetter()
+    const title = titleGetter()
+
+    console.log('ON PUBLISH', { title, content })
+
+    if (!title || !content) return
+
+    if (articleId) {
+      await publishArticle({ id: articleId, title, content })
+      return
+    }
+
+    await createArticle({ title, content })
+  }
+
+  const onDrop = async (file: File) => {
+    setImage(file)
+  }
+
   return {
     onSave,
     onIdle,
+    onPublish,
+    onDrop,
   }
 }

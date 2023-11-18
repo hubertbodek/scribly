@@ -1,19 +1,26 @@
 import { notFound } from 'next/navigation'
+
 import { getServerClient } from '@/api/supabase/server'
-import { adminAuthClient } from '@/api/supabase/admin'
 import { Content } from '@/components/shared/editor'
 
-interface ArticlePage {
+interface ArticlePageProps {
   params: {
-    article: string[]
+    author: string
+    article: string
   }
 }
 
-export default async function Article({ params }: ArticlePage) {
+export default async function Article({ params }: ArticlePageProps) {
   const supabase = getServerClient()
-  const [handle, slug] = params.article
+  const { author, article } = params
 
-  const { data, error } = await supabase.from('profiles').select().eq('handle', handle).single()
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*, articles(*)')
+    .filter('articles.is_published', 'eq', true)
+    .eq('handle', author)
+    .eq('articles.id', article)
+    .single()
 
   if (!data || error) {
     return notFound()
@@ -22,8 +29,8 @@ export default async function Article({ params }: ArticlePage) {
   const { data: articleData, error: articleError } = await supabase
     .from('articles')
     .select()
-    .eq('user_id', data.id)
-    .eq('id', slug)
+    .eq('profile_id', data.id)
+    .eq('id', article)
     .single()
 
   if (!articleData || articleError) {
