@@ -13,15 +13,15 @@ export default function EditorClient(props: {
 }) {
   const { onSave, onIdle, onPublish, onDrop } = useEditorClient()
 
-  const idleProps = {
-    onIdle: props.draft ? onIdle : undefined,
-    idleTime: props.draft ? 5000 : undefined,
-  }
+  // const idleProps = {
+  //   onIdle: props.draft ? onIdle : undefined,
+  //   idleTime: props.draft ? 5000 : undefined,
+  // }
 
   return (
     <>
       <ImageEditor onDrop={onDrop} />
-      <Editor {...idleProps} initialTitle={props.title} initialContent={props.content}>
+      <Editor initialTitle={props.title} initialContent={props.content}>
         <div className="flex gap-8">
           {props.draft && (
             <Editor.Save onSave={onSave}>

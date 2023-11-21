@@ -31,6 +31,7 @@ export default async function Article({ params }: ArticlePageProps) {
     .select()
     .eq('profile_id', data.id)
     .eq('id', article)
+    .eq('is_published', true)
     .single()
 
   if (!articleData || articleError) {
@@ -43,7 +44,7 @@ export default async function Article({ params }: ArticlePageProps) {
 
   return (
     <section className="prose py-20 mx-auto px-4">
-      <h1>{title}</h1>
+      <h1 className="text-h1">{title}</h1>
       <TextRenderer content={articleContents} />
     </section>
   )

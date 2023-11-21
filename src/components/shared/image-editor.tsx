@@ -38,7 +38,7 @@ export function ImageEditor({ initialImage, onDrop }: ImageEditorProps) {
         <Label htmlFor="file" className="h-full">
           <div className="w-full h-full cursor-pointer flex flex-col gap-2 items-center justify-center">
             <FileIcon className="w-16 h-16 text-gray-400" />
-            <h3 className="text-xl font-bold text-gray-400 text-center [text-wrap:balance]">
+            <h3 className="text-h3 font-bold text-gray-400 text-center [text-wrap:balance]">
               Drag a cover image or click to upload
             </h3>
           </div>

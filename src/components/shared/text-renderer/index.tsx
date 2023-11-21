@@ -8,7 +8,7 @@ export default function TextRenderer(props: { content: Content[] | null }) {
       {props.content?.map((item: any, idx: number) => {
         const Tag = item.type
 
-        return <Tag key={`${item.type}${idx}`} dangerouslySetInnerHTML={{ __html: item.content }} />
+        return <Tag key={`${item.type}${idx}`}>{item.content}</Tag>
       })}
     </>
   )

@@ -8,7 +8,7 @@ const SignInPage = () => {
 
   return (
     <main className="container">
-      <h1 className="text-3xl">Sign in</h1>
+      <h1 className="text-h1">Sign in</h1>
     </main>
   )
 }

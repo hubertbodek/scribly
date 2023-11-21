@@ -6,7 +6,7 @@ const SignUpPage = () => {
   return (
     <main className="flex h-screen">
       <div className="flex-1 bg-primary flex items-center justify-center">
-        <h1 className="text-primary-foreground text-6xl font-bold">Scribly</h1>
+        <h1 className="text-primary-foreground text-h1 font-bold">Scribly</h1>
       </div>
       <div className="flex-1 flex items-center justify-center">
         <Card className="w-[450px]">

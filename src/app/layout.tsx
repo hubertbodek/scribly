@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font'
 
-import '@/app/globals.css'
+import '@/styles/globals.css'
 import Providers from '@/providers'
-import Header from '@/components/layout/header'
 
 export const metadata: Metadata = {
   title: 'Scribly',
@@ -15,15 +14,11 @@ interface LayoutProps {
   modal: React.ReactNode
 }
 
-export default function RootLayout({ children, modal }: LayoutProps) {
+export default function RootLayout({ children }: LayoutProps) {
   return (
     <html lang="en">
       <body className={GeistSans.className}>
-        <Providers>
-          <Header />
-          {children}
-          {modal}
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   )

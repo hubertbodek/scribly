@@ -21,7 +21,7 @@ interface SectionMainProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 const SectionMain = ({ children, className, ...props }: SectionMainProps) => (
-  <main className={cn('max-w-4xl w-full flex flex-col gap-y-10', className)} {...props}>
+  <main className={cn('max-w-3xl w-full flex flex-col gap-y-10', className)} {...props}>
     {children}
   </main>
 )
@@ -31,7 +31,7 @@ interface SectionTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
 }
 
 const SectionTitle = ({ children, className, ...props }: SectionTitleProps) => (
-  <h1 className={cn('text-4xl font-bold mb-8', className)} {...props}>
+  <h1 className={cn('text-h1 font-bold mb-8', className)} {...props}>
     {children}
   </h1>
 )
@@ -51,7 +51,7 @@ interface SectionListItemProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const SectionListItem = ({ children, className, ...props }: SectionListItemProps) => (
-  <article className={cn('flex gap-x-8 gap-y-2 max-h-60 border', className)} {...props}>
+  <article className={cn('flex gap-x-8 gap-y-2 max-h-60', className)} {...props}>
     <div className="aspect-square w-1/6 bg-slate-200" />
     <div className="flex-1">{children}</div>
   </article>
@@ -62,13 +62,19 @@ interface SectionSidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const SectionSidebar = ({ children, className, ...props }: SectionSidebarProps) => (
-  <aside className={cn('flex flex-col gap-y-10 w-full max-w-xs border', className)} {...props}>
+  <aside
+    className={cn('flex flex-col gap-y-10 w-full max-w-xs max-lg:hidden', className)}
+    {...props}
+  >
     {children}
   </aside>
 )
 
 const SectionSidebarStickyWrapper = ({ children, className, ...props }: SectionSidebarProps) => (
-  <div className={cn('sticky top-10 w-full max-w-xs border self-start', className)} {...props}>
+  <div
+    className={cn('sticky top-10 w-full max-w-xs self-start max-lg:hidden', className)}
+    {...props}
+  >
     {children}
   </div>
 )

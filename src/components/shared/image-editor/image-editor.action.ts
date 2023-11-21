@@ -4,6 +4,13 @@ import { getServerClient, getUser } from '@/api/supabase/server'
 
 export const submitImage = async (formData: FormData) => {
   const file = formData.get('file') as File
+
+  console.log({ file })
+
+  if (!file) {
+    return
+  }
+
   const supabase = getServerClient()
 
   const user = await getUser()

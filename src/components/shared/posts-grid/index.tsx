@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+import { revalidatePath } from 'next/cache'
 import { PostgrestError, User } from '@supabase/supabase-js'
 
 import { type Tables } from '@/api/types'
@@ -7,6 +8,7 @@ import { getServerClient } from '@/api/supabase/server'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import PostCard from '@/components/dashboard/post-card'
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 
 interface Post extends Tables<'articles'> {}
 
@@ -43,13 +45,16 @@ export default async function PostsGrid({ posts, error, noDataMessage, user }: P
               <Link href={`/${profile?.handle}/${post.id}`}>Read</Link>
             </Button>
             <Button variant="link" className="px-0" asChild>
-              <Link href={`/scribe/edit/${post.id}`}>Edit</Link>
+              <Link href={`/scribe/${post.id}/edit`}>Edit</Link>
             </Button>
           </div>
         ) : (
-          <Button variant="link" className="px-0 self-end" asChild>
-            <Link href={`/scribe?article_id=${post.id}`}>Continue writing</Link>
-          </Button>
+          <Link
+            href={`/scribe?article_id=${post.id}`}
+            className="px-0 self-end hover:underline text-sm font-semibold text-primary"
+          >
+            Continue writing
+          </Link>
         )
 
         return <PostCard key={post.id} post={post} buttonSlot={ButtonsSlot} />

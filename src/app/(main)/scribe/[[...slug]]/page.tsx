@@ -41,7 +41,7 @@ export default async function Scribe({ params, searchParams }: ScribeProps) {
   }
 
   if (slug) {
-    const [editSegment, articleIdSegment] = slug
+    const [articleIdSegment, editSegment] = slug
     const isEdititingPublishedArticle = editSegment === 'edit'
 
     if (!isEdititingPublishedArticle) {

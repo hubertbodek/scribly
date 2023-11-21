@@ -10,6 +10,7 @@ export default function useEditorClient() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [image, setImage] = useState<File | null>(null)
+
   const createArticle = async (article: { title: string; content: Content[] }) => {
     const { title, content } = article
     const currentUser = await getUser()
@@ -20,7 +21,7 @@ export default function useEditorClient() {
       .insert([
         {
           title,
-          user_id: currentUser?.data.user?.id,
+          profile_id: currentUser?.data.user?.id,
           content: JSON.stringify(content),
         },
       ])
